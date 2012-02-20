@@ -5,7 +5,9 @@ require 'yaml'
 require 'optparse'
 
 $:.unshift File.join File.dirname(__FILE__), *%w[.. lib]
-require 'zkhttpcheck'
+require 'checknotify'
+
+#class DistChecker
 
 def get_config
   options = {}
@@ -24,9 +26,34 @@ def get_config
   YAML.load_file(options[:config_file])
 end
 
+# Parse config
 config = get_config
-checker = ZkHttpCheck.new(config)
-checker.run_checks(config['ip'], 
-                  config['HttpCheck']['port'], 
-                  config['HttpCheck']['uri'], 
-                  config['CHECK_INTERVAL'])
+
+# Setup logger
+if config.key? 'log_file'
+  log = Logger.new(config['log_file'])
+else
+  log = Logger.new(STDOUT)
+end
+
+# Notification: Initialize zookeeper client
+zk_notify = ZkNode.new(connect_string=config['ZkNode']['connect_string'],
+                        parent_dir=config['ZkNode']['parent_dir'],
+                        logger=log)
+
+# Check: Initialize http check             
+httpd_chk = HttpCheck.new( ip=config['ip'], 
+                            port=config['HttpCheck']['port'], 
+                            uri=config['HttpCheck']['uri'], 
+                            hostname=config['hostname'], 
+                            logger=log)
+
+cn = CheckNotify.new(logger=log)
+cn.new_check=httpd_chk
+cn.new_notification=zk_notify
+
+while true
+  cn.check_status(config['ip'], config['hostname'])
+  sleep config['CHECK_INTERVAL']
+end
+
