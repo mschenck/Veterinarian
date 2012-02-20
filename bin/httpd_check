@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'yaml'
+require 'optparse'
+
+$:.unshift File.join File.dirname(__FILE__), *%w[.. lib]
+require 'zkhttpcheck'
+
+def get_config
+  options = {}
+  optparse = OptionParser.new do |opts|
+    opts.banner = "Usage: #{ARGV[0]} [options]"
+    opts.on("-c", "--config [file]", "path to config (required)") do |c|
+      options[:config_file] = c
+    end
+  end
+  optparse.parse!
+  if not options[:config_file]
+    puts optparse
+    exit
+  end
+
+  YAML.load_file(options[:config_file])
+end
+
+config = get_config
+checker = ZkHttpCheck.new(config)
+checker.run_server(config['ip'], config['port'], config['health_uri'], config['CHECK_INTERVAL'])

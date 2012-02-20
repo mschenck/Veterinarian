@@ -1,0 +1,10 @@
+---
+ip            : 127.0.0.1
+port          : 8000
+hostname      : mac-one.tumblr.com
+zookeeper_path: /webs
+health_uri    : /index.html
+CHECK_INTERVAL: 5
+log_file      : httpd_check.log
+zookeepers    :
+  - 127.0.0.1:2181
