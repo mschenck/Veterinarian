@@ -15,7 +15,9 @@ class ZkHttpCheck
     end
     
     # Initialize zookeeper client
-    @zk_client = ZkNode.new(@config['zk_conn_string'], @config['zookeeper_path'], self.log)    
+    @zk_client = ZkNode.new(connect_string=config['ZkNode']['connect_string'],
+                            parent_dir=@config['ZkNode']['zookeeper_path'],
+                            logger=self.log)    
     @httpd_chk = HttpCheck.new(self.log)
   end
   
@@ -29,7 +31,7 @@ class ZkHttpCheck
     log.warn "Service unhealthy"
   end
   
-  def run_check(ip='127.0.0.1', port='80', check_uri='/', check_interval=5)
+  def run_checks(ip='127.0.0.1', port='80', check_uri='/', check_interval=5)
     last_state = nil
     while true
       # perform health check

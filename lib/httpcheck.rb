@@ -10,8 +10,9 @@ class HttpCheck
   
   def health_check(ip, port, uri = '/')
     begin
-      h = Curl::Easy::perform("http://#{ip}:#{port}#{uri}")
-      log.add Logger::Severity::DEBUG, "Received response code #{h.response_code}"
+      check_url = "http://#{ip}:#{port}#{uri}"
+      h = Curl::Easy::perform(check_url)
+      log.add Logger::Severity::DEBUG, "HttpCheck health_check #{check_url} : Response code #{h.response_code}"
       if h.response_code == 200
         return true
       end      

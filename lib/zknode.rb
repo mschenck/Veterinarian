@@ -7,10 +7,10 @@ class ZkNode
   attr_accessor :parent_dir
   attr_accessor :client
   
-  def initialize(host = "localhost:2181", dir = "/", logger=Logger.new(STDOUT))
+  def initialize(connect_string="localhost:2181", parent_dir="/", logger=Logger.new(STDOUT))
     self.log = logger
-    self.connect_string = host
-    self.parent_dir = dir  
+    self.connect_string = connect_string
+    self.parent_dir = parent_dir  
   
     connect
     create_path

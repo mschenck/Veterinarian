@@ -2,8 +2,11 @@
 ip            : 127.0.0.1
 port          : 8000
 hostname      : mac-one.tumblr.com
-zookeeper_path: /webs
-health_uri    : /index.html
 CHECK_INTERVAL: 5
 log_file      : httpd_check.log
-zk_conn_string: 127.0.0.1:2181
+ZkNode:
+  connect_string: 127.0.0.1:2181
+  parent_dir    : /webs
+HttpCheck:
+  port: 8000
+  uri : /index.html
