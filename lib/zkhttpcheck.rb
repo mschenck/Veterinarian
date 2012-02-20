@@ -19,7 +19,7 @@ class ZkHttpCheck < HttpCheck
       self.log = Logger.new(STDOUT)
     end
     
-    @zk = ZkNode.new(@config['server'], @config['zookeeper_path'])
+    @zk = ZkNode.new(@config['zk_conn_string'], @config['zookeeper_path'])
     @zk.logger=self.log
     
     old_initialize
