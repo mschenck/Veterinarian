@@ -2,28 +2,39 @@ require 'curb'
 require 'logger'
 
 class HttpCheck
+  attr_accessor :log
+  
   def initialize()
+    self.log = Logger.new(STDOUT)
+  end
+  
+  def logger
+    self.log
+  end
+  
+  def logger=(logger)
+    self.log = logger
   end
   
   def health_check(ip, port, uri = '/')
     begin
       h = Curl::Easy::perform("http://#{ip}:#{port}#{uri}")
-      puts "debug: Received response code #{h.response_code}"
+      log.add Logger::Severity::DEBUG, "Received response code #{h.response_code}"
       if h.response_code == 200
         return true
       end      
     rescue
-      puts "debug: Failed to perform health check"
+      log.add Logger::Severity::DEBUG, "Failed to perform health check"
     end
     false
   end
 
   def mark_healthy
-    puts "Service healthy"
+    log.info "Service healthy"
   end
 
   def mark_unhealthy
-    puts "Service unhealthy"
+    log.warn "Service unhealthy"
   end
   
   def run_server(ip='127.0.0.1', port='80', check_uri='/', check_interval=5)
