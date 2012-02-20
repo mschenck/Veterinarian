@@ -1,14 +1,9 @@
+require 'logger'
 require 'httpcheck'
 require 'zknode'
-require 'logger'
 
-
-class ZkHttpCheck < HttpCheck
+class ZkHttpCheck
   attr_accessor :log
-  
-  alias_method :old_initialize, :initialize
-  alias_method :old_mark_healthy, :mark_healthy
-  alias_method :old_mark_unhealthy, :mark_unhealthy
   
   def initialize(config)
     @config = config
@@ -19,20 +14,38 @@ class ZkHttpCheck < HttpCheck
       self.log = Logger.new(STDOUT)
     end
     
-    @zk = ZkNode.new(@config['zk_conn_string'], @config['zookeeper_path'])
-    @zk.logger=self.log
-    
-    old_initialize
+    # Initialize zookeeper client
+    @zk_client = ZkNode.new(@config['zk_conn_string'], @config['zookeeper_path'], self.log)    
+    @httpd_chk = HttpCheck.new(self.log)
   end
   
   def mark_healthy
-    @zk.healthy(@config['ip'], @config['hostname'])
-    old_mark_healthy
+    @zk_client.healthy(@config['ip'], @config['hostname'])
+    log.info "Service healthy"
   end
   
   def mark_unhealthy
-    @zk.unhealthy(@config['ip'])
-    old_mark_unhealthy
+    @zk_client.unhealthy(@config['ip'])
+    log.warn "Service unhealthy"
+  end
+  
+  def run_check(ip='127.0.0.1', port='80', check_uri='/', check_interval=5)
+    last_state = nil
+    while true
+      # perform health check
+      healthy = @httpd_chk.health_check(ip, port, check_uri)
+  
+      # check health, only toggle on state change
+      if healthy and not last_state
+        mark_healthy
+      elsif not healthy and last_state
+        mark_unhealthy
+      end
+  
+      # update state and sleep
+      last_state = healthy
+      sleep check_interval
+    end
   end
 end
 

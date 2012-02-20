@@ -26,4 +26,4 @@ end
 
 config = get_config
 checker = ZkHttpCheck.new(config)
-checker.run_server(config['ip'], config['port'], config['health_uri'], config['CHECK_INTERVAL'])
+checker.run_check(config['ip'], config['port'], config['health_uri'], config['CHECK_INTERVAL'])

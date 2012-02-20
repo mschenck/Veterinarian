@@ -1,18 +1,10 @@
-require 'curb'
 require 'logger'
+require 'curb'
 
 class HttpCheck
   attr_accessor :log
   
-  def initialize()
-    self.log = Logger.new(STDOUT)
-  end
-  
-  def logger
-    self.log
-  end
-  
-  def logger=(logger)
+  def initialize(logger=Logger.new(STDOUT))
     self.log = logger
   end
   
@@ -28,32 +20,4 @@ class HttpCheck
     end
     false
   end
-
-  def mark_healthy
-    log.info "Service healthy"
-  end
-
-  def mark_unhealthy
-    log.warn "Service unhealthy"
-  end
-  
-  def run_server(ip='127.0.0.1', port='80', check_uri='/', check_interval=5)
-    last_state = nil
-    while true
-      # perform health check
-      healthy = health_check(ip, port, check_uri)
-  
-      # check health, only toggle on state change
-      if healthy and not last_state
-        mark_healthy
-      elsif not healthy and last_state
-        mark_unhealthy
-      end
-  
-      # update state and sleep
-      last_state = healthy
-      sleep check_interval
-    end
-  end
 end
-
