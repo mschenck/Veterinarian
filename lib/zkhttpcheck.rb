@@ -10,7 +10,7 @@ class ZkHttpCheck < HttpCheck
   
   def initialize(config)
     @config = config
-    @zk = ZkNode.new(@config['zookeepers'], @config['zookeeper_path'])
+    @zk = ZkNode.new(@config['server'], @config['zookeeper_path'])
   end
   
   def mark_healthy

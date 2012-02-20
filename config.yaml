@@ -6,5 +6,4 @@ zookeeper_path: /webs
 health_uri    : /index.html
 CHECK_INTERVAL: 5
 log_file      : httpd_check.log
-zookeepers    :
-  - 127.0.0.1:2181
+server        : 127.0.0.1:2181

@@ -2,13 +2,12 @@ require 'zookeeper'
 require 'logger'
 
 class ZkNode
-  def initialize(serverlist = ["localhost:2181"], dir = "/")
-    @serverlist = serverlist
-    @parent_dir = dir
-    
-    @zk = Zookeeper.new(serverlist[0])
-    @zk.create({ :path => @parent_dir })
+  def initialize(host = "localhost:2181", dir = "/")
+    @parent_dir = dir    
+    @zk = Zookeeper.new(host)
     @log = Logger.new(STDOUT)
+    
+    @zk.create({ :path => @parent_dir })
   end
   
   def healthy(subdir, value = nil, ephemeral = true)
