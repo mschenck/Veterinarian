@@ -1,9 +1,10 @@
 ---
 ip            : 127.0.0.1
-port          : 8000
 hostname      : mac-one.tumblr.com
-CHECK_INTERVAL: 5
-log_file      : httpd_check.log
+CHECK_INTERVAL: 2
+logging:
+  level: INFO
+  file : httpd_check.log
 ZkNode:
   connect_string: 127.0.0.1:2181
   parent_dir    : /webs

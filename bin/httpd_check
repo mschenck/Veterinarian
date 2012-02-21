@@ -30,10 +30,14 @@ end
 config = get_config
 
 # Setup logger
-if config.key? 'log_file'
-  log = Logger.new(config['log_file'])
+log = Logger.new(config['logging']['file'])
+case config['logging']['level']
+when "DEBUG", "debug"
+  log.level = Logger::DEBUG
+when "WARN", "warn"
+  log.level = Logger::WARN
 else
-  log = Logger.new(STDOUT)
+  log.level = Logger::INFO
 end
 
 # Notification: Initialize zookeeper client

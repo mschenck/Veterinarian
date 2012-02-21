@@ -13,7 +13,7 @@ class CheckNotify
     self.log = logger
     self.checks = []
     self.notifications = []
-    self.health = false
+    self.health = nil
     self.last_state = nil
   end
   
@@ -40,17 +40,15 @@ class CheckNotify
   end
   
   def poll_checks
+    self.health = true
     checks.each do |check|
-      if not health
-        self.health = check.poll
-      else
-        self.health = health and check.poll
-      end
+      self.health &= check.poll
     end
   end
   
   def check_status(key, value)
     poll_checks
+    log.add Logger::Severity::DEBUG, "check_status - last_state: #{last_state} - health: #{health}"
     
     if health == last_state
       return
@@ -63,7 +61,6 @@ class CheckNotify
     end
     
     self.last_state = health
-    self.health = nil
   end
 
 end
