@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
-
 $:.unshift File.join File.dirname(__FILE__), *%w[.. lib]
 $:.unshift File.join File.dirname(__FILE__), *%w[.. modules]
 require 'veterinarian'
-vet = Veterinarian.new
-vet.start
+Veterinarian.new.start
