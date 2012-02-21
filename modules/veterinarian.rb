@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'optparse'
-require 'checknotify'
 require 'yaml'
 require 'logger'
 
