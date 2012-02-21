@@ -84,6 +84,44 @@ class Veterinarian
     
     # Initialize CheckNotify
     self.check_notify = CheckNotify.new(logger=log)
+    
+    # Load check modules
+    load_check_modules(config['checks'])
+    
+    # Load notification modules
+    load_notify_modules(config['notificaitons'])
+  end
+  
+  def load_check_modules(checks)
+    checks.keys.each do |check|
+      begin
+        require check
+        params = checks[check]
+        self.new_check=Kernel.const_get(check).new(
+            ip=config['ip'], 
+            hostname=config['hostname'], 
+            logger=log,
+            params)
+        log.info "Loaded check module [#{check}] successfully"
+      rescue
+        log.error "Failed to load check module [#{check}]"
+      end
+    end
+  end
+  
+  def load_notify_modules(notificaitons)
+    notificaitons.keys.each do |notify|
+      begin
+        require notify
+        params = notificaitons[notify]
+        self.new_notify=Kernel.const_get(notify).new( 
+            logger=log,
+            params)
+        log.info "Loaded notification module [#{notify}] successfully"
+      rescue
+        log.error "Failed to load notification module [#{check}]"
+      end
+    end
   end
   
   def get_config

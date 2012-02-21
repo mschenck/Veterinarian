@@ -5,9 +5,11 @@ CHECK_INTERVAL: 2
 logging:
   level: INFO
   file : httpd_check.log
-ZkNode:
-  connect_string: 127.0.0.1:2181
-  parent_dir    : /webs
-HttpCheck:
-  port: 8000
-  uri : /index.html
+notificaitons:
+  ZkNode:
+    connect_string: 127.0.0.1:2181
+    parent_dir    : /webs
+checks:
+  HttpCheck:
+    port: 8000
+    uri : /index.html

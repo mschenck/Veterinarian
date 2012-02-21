@@ -10,11 +10,11 @@ class HttpCheck
   attr_accessor :hostname
   attr_accessor :check_url
   
-  def initialize(ip, port, uri, hostname, logger=Logger.new(STDOUT))
+  def initialize(ip, hostname, logger=Logger.new(STDOUT), params)
     self.log = logger
     self.ip = ip
-    self.port = port
-    self.uri = uri
+    self.port = params['port']
+    self.uri = params['uri']
     self.hostname = hostname
     self.check_url = "http://#{ip}:#{port}#{uri}"
   end
