@@ -6,13 +6,6 @@ require 'veterinarian'
 vet = Veterinarian.new
 
 ################################################################################
-# Notification: Initialize zookeeper client
-require 'zknode'
-vet.new_notify=ZkNode.new(connect_string=vet.config['ZkNode']['connect_string'],
-                        parent_dir=vet.config['ZkNode']['parent_dir'],
-                        logger=vet.log)
-
-################################################################################
 # Check: Initialize http check             
 require 'httpcheck'
 vet.new_check=HttpCheck.new( ip=vet.config['ip'], 
@@ -20,6 +13,13 @@ vet.new_check=HttpCheck.new( ip=vet.config['ip'],
                             uri=vet.config['HttpCheck']['uri'], 
                             hostname=vet.config['hostname'], 
                             logger=vet.log)
+                            
+################################################################################
+# Notification: Initialize zookeeper client
+require 'zknode'
+vet.new_notify=ZkNode.new(connect_string=vet.config['ZkNode']['connect_string'],
+                        parent_dir=vet.config['ZkNode']['parent_dir'],
+                        logger=vet.log)
 
 ################################################################################
 # Start veterinarian
