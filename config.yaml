@@ -1,6 +1,6 @@
 ---
 ip            : 127.0.0.1
-hostname      : www.tumblr.com
+hostname      : mschenck.com
 CHECK_INTERVAL: 2
 logging:
   level: INFO
