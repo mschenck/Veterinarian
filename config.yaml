@@ -1,6 +1,6 @@
 ---
 ip            : 127.0.0.1
-hostname      : mac-one.tumblr.com
+hostname      : www.tumblr.com
 CHECK_INTERVAL: 2
 logging:
   level: INFO

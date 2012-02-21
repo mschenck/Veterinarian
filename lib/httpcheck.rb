@@ -20,9 +20,9 @@ class HttpCheck
   
   def poll
     begin
-      check_request = Curl::Easy::perform(check_url)
-      # check_request.headers['Host'] = hostname
-      # check_request.perform
+      check_request = Curl::Easy::new(check_url)
+      check_request.headers['Host'] = hostname
+      check_request.perform
       
       log.add Logger::Severity::DEBUG, "HttpCheck poll: #{check_url} Response code #{check_request.response_code}"
       if check_request.response_code == 200
