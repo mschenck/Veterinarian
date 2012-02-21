@@ -6,11 +6,7 @@ require 'logger'
 require 'check_notify'
 
 class Veterinarian
-  attr_accessor :log
-  attr_accessor :config
-  attr_accessor :check_notify
-  attr_accessor :key
-  attr_accessor :value
+  attr_accessor :log, :config, :check_notify, :key, :value
   
   def initialize
     # Parse config
