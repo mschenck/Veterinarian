@@ -1,0 +1,70 @@
+require 'rubygems'
+require 'optparse'
+require 'checknotify'
+require 'yaml'
+
+class Veterinarian
+  attr_accessor :log
+  attr_accessor :config
+  attr_accessor :check_notify
+  attr_accessor :key
+  attr_accessor :value
+  
+  def initialize
+    # Parse config
+    self.config = get_config
+    
+    self.key = config['ip']
+    self.value = config['hostname']
+    
+    # Setup logger
+    set_logger
+    
+    # Initialize CheckNotify
+    self.check_notify = CheckNotify.new(logger=log)
+  end
+  
+  def get_config
+    options = {}
+    optparse = OptionParser.new do |opts|
+      opts.banner = "Usage: #{ARGV[0]} [options]"
+      opts.on("-c", "--config [file]", "path to config (required)") do |c|
+        options[:config_file] = c
+      end
+    end
+    optparse.parse!
+    if not options[:config_file]
+      puts optparse
+      exit
+    end
+
+    YAML.load_file(options[:config_file])
+  end
+  
+  def set_logger
+    self.log = Logger.new(config['logging']['file'])
+    case config['logging']['level']
+    when "DEBUG", "debug"
+      self.log.level = Logger::DEBUG
+    when "WARN", "warn"
+      self.log.level = Logger::WARN
+    else
+      self.log.level = Logger::INFO
+    end
+  end
+  
+  def new_check=(check)
+    check_notify.new_check=check
+  end
+  
+  def new_notify=(check)
+    check_notify.new_notification=check
+  end
+  
+  def start
+    while true
+      check_notify.check_status(key, value)
+      sleep config['CHECK_INTERVAL']
+    end
+  end
+end

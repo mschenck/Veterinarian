@@ -1,6 +1,4 @@
 require 'logger'
-require 'httpcheck'
-require 'zknode'
 
 class CheckNotify
   attr_accessor :log
