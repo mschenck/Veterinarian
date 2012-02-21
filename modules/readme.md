@@ -8,7 +8,7 @@ Veterinarian supports two types of modules:
 
 A check is merely a ruby class with the required method "poll", which is expected to return the boolean "true" for healthy and "false" for unhealthy.
 
-The "initialize" method for you check must (at least) support three named variables "ip", "hostname", and "log" (to be used for your logger facility).
+The "initialize" method for you check must (at least) support three named variables "ip", "hostname", and "log" (to be used for your logger facility), and a final catchall for optional params.
 
 ''
 require 'logger'
@@ -16,15 +16,19 @@ require 'logger'
 class BasicCheck
   attr_accessor :log
   
-  def initialize(ip, hostname, logger=Logger.new(STDOUT))
+  def initialize(ip, hostname, logger=Logger.new(STDOUT), params)
     self.log = logger
     self.ip = ip
     self.hostname = hostname
   end
+  
+  def poll
+    return true
+  end
 end
 ''
 
-(optional) You can include additional variables by configuring them as attributes in the plugin configuration section of the configuration yaml.
+(optional) You can include additional variables by configuring them as attributes in the plugin configuration section of the configuration yaml.  These will be passed in to the "params" final argument
 
 
 

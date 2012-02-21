@@ -13,3 +13,4 @@ checks:
   HttpCheck:
     port: 8000
     uri : /index.html
+    
