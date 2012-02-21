@@ -89,7 +89,7 @@ class Veterinarian
     load_check_modules(config['checks'])
     
     # Load notification modules
-    load_notify_modules(config['notificaitons'])
+    load_notify_modules(config['notifications'])
   end
   
   def load_check_modules(checks)
