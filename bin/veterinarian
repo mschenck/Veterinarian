@@ -2,4 +2,5 @@
 $:.unshift File.join File.dirname(__FILE__), *%w[.. lib]
 $:.unshift File.join File.dirname(__FILE__), *%w[.. modules]
 require 'veterinarian'
+
 Veterinarian.new.start
